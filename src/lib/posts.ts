@@ -1,8 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import matter from "gray-matter";
-import { remark } from "remark";
-import html from "remark-html";
+import { marked } from "marked";
 
 const postsDirectory = join(process.cwd(), "posts");
 
@@ -63,11 +62,8 @@ export async function getPostData(id: string): Promise<PostData> {
   // メタデータを解析
   const matterResult = matter(fileContents);
 
-  // Markdown を HTML に変換
-  const processedContent = await remark()
-    .use(html)
-    .process(matterResult.content);
-  const contentHtml = processedContent.toString();
+  // Markdown を HTML に変換 (marked を使用)
+  const contentHtml = await marked(matterResult.content);
 
   return {
     id,
