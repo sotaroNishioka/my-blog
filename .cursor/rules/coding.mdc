@@ -1,0 +1,161 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 1. 技術仕様
+
+## 1.1 システム概要
+- **フレームワーク**: Next.js (Pages Router)
+- **言語**: TypeScript 5.x, React 18+
+- **スタイリング**: Tailwind CSS 3.x
+- **Markdown処理**: marked
+- **ホスティング**: GitHub Pages
+- **CI/CD**: GitHub Actions
+
+## 1.2 アーキテクチャ図
+```plaintext
++-----------+      +-----------------+      +--------------+
+| posts/*.md| ---> |   Next.js Build | ---> | GitHub Pages |
++-----------+      |  (Static Site)  |      |   (CDN)      |
+                   +-----------------+      +-------+------+
+                                                  |
+                                                  v
+                                             +----------+
+                                             | Browser  |
+                                             +----------+
+```
+
+## 1.3 データ構造 (Markdown Frontmatter)
+ブログ記事のMarkdownファイルは、以下のFrontmatter構造を持つことを基本とします。
+
+```yaml
+---
+title: '記事のタイトル'
+date: 'YYYY-MM-DD' # 公開日
+tags: ['タグ1', 'タグ2'] # オプション
+# 必要に応じて他のメタデータを追加可能 (例: description, author)
+---
+
+記事の本文 (Markdown形式)
+```
+
+## 1.4 技術スタック
+- **Frontend**: Next.js (Pages Router), React 18+, TypeScript, Tailwind CSS
+- **Markdown**: marked, gray-matter
+- **CI/CD**: GitHub Actions, GitHub Pages
+- **Lint/Format**: Biome
+- **Testing**: Jest, React Testing Library
+
+## 1.5 ディレクトリ設計 (Pages Router)
+```
+/
+├── public/              # 静的ファイル (画像など)
+├── posts/               # Markdown記事ファイル
+├── src/
+│   ├── pages/           # Next.js ページコンポーネント
+│   │   ├── _app.tsx
+│   │   ├── index.tsx      # TOPページ (記事一覧)
+│   │   └── posts/
+│   │       └── [id].tsx   # 記事詳細ページ
+│   ├── components/      # 再利用可能なUIコンポーネント
+│   │   └── Layout.tsx
+│   ├── lib/             # ユーティリティ関数
+│   │   └── posts.ts     # Markdown処理ロジック
+│   ├── styles/          # スタイル関連
+│   │   └── globals.css
+│   └── __tests__/       # テストファイル
+│       ├── Home.test.tsx
+│       └── Layout.test.tsx
+├── .github/
+│   └── workflows/
+│       └── deploy.yml   # GitHub Actions ワークフロー
+├── .biome.json          # Biome設定
+├── .cursor/
+│   └── rules/
+├── .gitignore
+├── jest.config.js
+├── jest.setup.js
+├── next.config.js
+├── package.json
+├── postcss.config.js
+├── tailwind.config.js
+├── tsconfig.json
+└── README.md
+```
+
+## 1.6 Biome 設定
+```json
+{
+  "formatter": true,
+  "semantic": true,
+  "exports-ordering": true,
+  "jsx": {
+    "quote-style": "single"
+  },
+  "importModuleSpecifier": {
+    "mode": "relative"
+  }
+}
+```
+
+## 1.7 命名規則・コーディングスタイル
+### 1.7.1 ファイル・ディレクトリ命名
+- **PascalCase.tsx**: Reactコンポーネント
+- **camelCase.ts**: ユーティリティ、ヘルパー関数
+- **kebab-case.md**: Markdown記事ファイル (例: `2024-07-27-my-first-post.md`)
+- **kebab-case**: Next.js ページファイル (例: `index.tsx`, `[id].tsx`)
+
+- セミコロン: 常に付与
+- クォート: シングルクォート
+- 行長: 最大120文字
+- import順序: 外部ライブラリ → 絶対パス (`src/`) → 相対パス
+- 空行: 機能単位で1行挿入
+
+## 1.8 コーディングプラクティス
+
+### 原則
+#### シンプルさの追求
+- 静的サイトジェネレーターとしてのNext.jsの利点を活かし、複雑な状態管理やサーバーサイドロジックは最小限に留める。
+- 必要になるまで抽象化しない (YAGNI)。
+
+#### 関数型アプローチ (FP)
+- `map`, `filter`, `reduce` などの高階関数を活用。
+- 純粋関数を優先し、副作用を局所化する。
+- データ変換ロジック (`src/lib/posts.ts` など) は特に純粋性を意識する。
+
+#### テスト駆動開発 (TDD)
+- UIコンポーネントとユーティリティ関数のテストを記述する。
+- React Testing Library を用いてユーザー視点のテストを心がける。
+
+### 実装パターン
+#### 型定義
+- `src/types` ディレクトリ (もし作成する場合) や、関連するファイルの先頭で型を定義する。
+- MarkdownのFrontmatterに対応する型 (`PostData` など) を定義する。
+
+#### ユーティリティ関数
+- 汎用的な処理 (日付フォーマット、Markdown処理など) は `src/lib` に切り出す。
+
+#### エラーハンドリング
+- `getStaticProps` や `getStaticPaths` 内でのファイル読み込みエラーなどを考慮し、適切なフォールバック (例: 404ページ) を実装する。
+
+### 実装手順
+1. **記事データ構造定義**: Markdown Frontmatterの形式を決定する。
+2. **データ取得ロジック実装**: `src/lib/posts.ts` で記事一覧取得、記事詳細取得の関数を実装する。
+3. **ページコンポーネント実装**: `getStaticProps`, `getStaticPaths` を使用してデータをページに渡す。
+4. **UIコンポーネント実装**: 共通レイアウトや記事表示用のコンポーネントを作成する。
+5. **テスト**: 必要に応じてコンポーネントやユーティリティのテストを作成する。
+
+### プラクティス
+- Markdownファイルの管理方法を明確にする (例: ファイル名規則)。
+- Tailwind CSSのクラスは適切に整理し、必要であれば `@apply` やコンポーネント化で再利用性を高める。
+
+### コードスタイル
+- Biomeのフォーマッターに従う。
+- 可読性を重視し、適切なコメントを追加する。
+
+### テスト戦略
+- 主要なUIコンポーネント (`Layout`, 記事表示部分など) のレンダリングテスト。
+- データ取得・加工ロジック (`src/lib/posts.ts`) の単体テスト。
+- GitHub Actionsでテストを自動実行する。
+

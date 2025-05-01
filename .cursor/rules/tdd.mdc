@@ -1,0 +1,88 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# テスト駆動開発 (TDD) – Next.js プロジェクト向けガイド
+
+## 1. 基本サイクル
+Next.js プロジェクトでは、Jest と React Testing Library を組み合わせて以下のサイクルを回します：
+
+1. **Red**  
+   - `npm run test -- --watch` を実行し、未作成のテストが失敗することを確認
+2. **Green**  
+   - 最小限の実装を行い、テストが通るようにする
+3. **Refactor**  
+   - コードを整理・リファクタリングして可読性を向上させる
+
+```bash
+# テスト実行（ウォッチモード）
+npm run test -- --watch
+```   
+
+## 2. 重要な考え方
+
+- **テストはドキュメント**  
+  テストコードがコンポーネントやユーティリティの仕様をそのまま示す
+
+- **Arrange-Act-Assert の順序**  
+  1. **Arrange**: テスト用のモックやレンダー準備  
+  2. **Act**: ユーザー操作や関数呼び出し  
+  3. **Assert**: 期待する結果の検証
+
+- **テスト名のベストプラクティス**  
+  `describe` / `it` ブロックで状況→操作→期待結果をわかりやすく記述
+  ```ts
+  describe('LoginButton コンポーネント', () => {
+    it('無効な入力時にクリックできないこと', () => {
+      // ...
+    });
+  });
+  ```
+
+## 3. リファクタリングフェーズのツール
+
+Next.js 環境で活用するリファクタリング・分析ツールを紹介します：
+
+1. **型チェック & Lint**  
+   ```bash
+   # TypeScript 型チェック
+   npm run build:check
+   # ESLint
+   npm run lint
+   ```
+2. **デッドコード検出**  
+   ```bash
+   npm exec ts-prune src/
+   ```
+3. **コードカバレッジ**  
+   ```bash
+   npm run test -- --coverage
+   open coverage/lcov-report/index.html
+   ```
+4. **Git コミット戦略**  
+   - 各フェーズ完了ごとにコミット  
+   - コミットメッセージ例：  
+     - `test: Button コンポーネントのユニットテスト追加`  
+     - `feat: useAuth フック実装`  
+     - `refactor: authentication ロジック抽出`
+
+## 4. 実践ステップ
+
+1. **テストファイルを作成**  
+   `__tests__/components/MyComponent.test.tsx`
+2. **最低限のテストを書く**  
+   ```ts
+   import { render, screen } from '@testing-library/react';
+   import MyComponent from '../components/MyComponent';
+
+   it('初期状態でテキストが表示されること', () => {
+     render(<MyComponent />);
+     expect(screen.getByText('Hello Next.js')).toBeInTheDocument();
+   });
+   ```
+3. **実装を追加してテストを通す**  
+4. **リファクタリング & 型チェック**  
+5. **カバレッジ確認 & コミット**
+
+
