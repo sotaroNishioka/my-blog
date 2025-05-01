@@ -7,5 +7,5 @@ module.exports = {
     unoptimized: true,
   },
   // 静的サイトとして出力
-  output: "export",
+  output: 'export',
 };

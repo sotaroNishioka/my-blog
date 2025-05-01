@@ -1,9 +1,9 @@
-import { readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
-import matter from "gray-matter";
-import { marked } from "marked";
+import { readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import matter from 'gray-matter';
+import { marked } from 'marked';
 
-const postsDirectory = join(process.cwd(), "posts");
+const postsDirectory = join(process.cwd(), 'posts');
 
 export type PostData = {
   id: string;
@@ -13,16 +13,16 @@ export type PostData = {
   contentHtml: string;
 };
 
-export function getSortedPostsData(): Omit<PostData, "contentHtml">[] {
+export function getSortedPostsData(): Omit<PostData, 'contentHtml'>[] {
   // posts ディレクトリからファイル名を取得
   const fileNames = readdirSync(postsDirectory);
   const allPostsData = fileNames.map((fileName: string) => {
     // ファイル名から id を取得 (ファイル名から .md を除いたもの)
-    const id = fileName.replace(/\.md$/, "");
+    const id = fileName.replace(/\.md$/, '');
 
     // Markdown ファイルを文字列として読み取る
     const fullPath = join(postsDirectory, fileName);
-    const fileContents = readFileSync(fullPath, "utf8");
+    const fileContents = readFileSync(fullPath, 'utf8');
 
     // gray-matter を使用してメタデータを解析
     const matterResult = matter(fileContents);
@@ -49,7 +49,7 @@ export function getAllPostIds() {
   return fileNames.map((fileName: string) => {
     return {
       params: {
-        id: fileName.replace(/\.md$/, ""),
+        id: fileName.replace(/\.md$/, ''),
       },
     };
   });
@@ -57,7 +57,7 @@ export function getAllPostIds() {
 
 export async function getPostData(id: string): Promise<PostData> {
   const fullPath = join(postsDirectory, `${id}.md`);
-  const fileContents = readFileSync(fullPath, "utf8");
+  const fileContents = readFileSync(fullPath, 'utf8');
 
   // メタデータを解析
   const matterResult = matter(fileContents);
