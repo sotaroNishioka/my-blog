@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
 
-import './button.css';
-
 type ButtonProps = {
   /** ボタンに表示する内容 */
   children: ReactNode;
