@@ -1,7 +1,7 @@
-import type { GetStaticProps, GetStaticPaths } from 'next';
+import type { GetStaticProps, GetStaticPaths, GetStaticPropsContext } from 'next';
 import Layout from '@/components/Layout';
 import { getAllPostIds, getPostData } from '@/lib/posts';
-import type { PostData } from '@/lib/posts';
+import type { PostData, PostsError } from '@/lib/posts';
 
 type Props = {
   post: PostData;
@@ -33,18 +33,37 @@ export default function Post({ post }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = getAllPostIds();
+  const result = getAllPostIds();
+
+  const paths = result.isOk() ? result.value : [];
+
   return {
     paths,
     fallback: false,
   };
 };
 
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-  const post = await getPostData(params?.id as string);
+export const getStaticProps: GetStaticProps<Props, { id: string }> = async (
+  context: GetStaticPropsContext<{ id: string }>
+) => {
+  if (!context.params) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const result = await getPostData(context.params.id);
+
+  if (result.isOk()) {
+    return {
+      props: {
+        post: result.value,
+      },
+    };
+  }
+
+  console.error('Failed to get post data:', result.error);
   return {
-    props: {
-      post,
-    },
+    notFound: true,
   };
 };
