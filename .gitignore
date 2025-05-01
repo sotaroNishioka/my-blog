@@ -41,3 +41,4 @@ lerna-debug.log*
 
 # Optional Files
 *.log 
+*storybook.log
