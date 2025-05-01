@@ -23,10 +23,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Build & Export
-        run: |
-          npm run build
-          npm run export   # out/ ディレクトリが生成される
+      - name: Build
+        run: npm run build # out/ ディレクトリが生成される
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3

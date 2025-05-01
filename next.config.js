@@ -6,4 +6,6 @@ module.exports = {
   images: {
     unoptimized: true,
   },
+  // 静的サイトとして出力
+  output: "export",
 };
