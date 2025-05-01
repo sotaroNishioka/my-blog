@@ -36,10 +36,20 @@ export default function Home({ posts }: Props) {
 }
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const posts = getSortedPostsData();
+  const postsResult = getSortedPostsData();
+
+  if (postsResult.isOk()) {
+    // 成功した場合のみ Result から値を取り出して props に渡す
+    return {
+      props: {
+        posts: postsResult.value,
+      },
+    };
+  }
+
+  // isOk() でなければエラーなので、ここでエラー処理
+  console.error('Error fetching posts:', postsResult.error);
   return {
-    props: {
-      posts,
-    },
+    notFound: true,
   };
 };
