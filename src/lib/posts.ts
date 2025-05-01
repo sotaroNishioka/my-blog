@@ -38,10 +38,16 @@ export function getSortedPostsData(): Result<Omit<PostData, 'contentHtml'>[], Po
         // gray-matter を使用してメタデータを解析
         const matterResult = matter(fileContents);
 
+        // 日付が Date オブジェクトの場合、YYYY-MM-DD 形式の文字列に変換
+        const dateString =
+          matterResult.data.date instanceof Date
+            ? matterResult.data.date.toISOString().split('T')[0]
+            : matterResult.data.date;
+
         return ok({
           id,
           title: matterResult.data.title,
-          date: matterResult.data.date,
+          date: dateString, // 文字列に変換した日付を使用
           tags: matterResult.data.tags || [],
         });
       } catch (e) {
