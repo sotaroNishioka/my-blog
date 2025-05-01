@@ -7,14 +7,16 @@
     "enabled": true,
     "rules": {
       "recommended": true
-    }
+    },
+    "ignore": [".next/**", "node_modules/**", "public/**", ".github/**", "posts/**/*.md"]
   },
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
     "indentStyle": "space",
     "indentWidth": 2,
-    "lineWidth": 120
+    "lineWidth": 120,
+    "ignore": [".next/**", "node_modules/**", "public/**", ".github/**", "posts/**/*.md"]
   },
   "javascript": {
     "formatter": {
