@@ -1,0 +1,9 @@
+/** @type {import('next').NextConfig} */
+module.exports = {
+  // export 時に末尾に slash をつける
+  trailingSlash: true,
+  // 画像最適化機能を無効化 (GitHub Pages は SSR を持たないため)
+  images: {
+    unoptimized: true,
+  },
+};
