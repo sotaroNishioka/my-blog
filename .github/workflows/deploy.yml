@@ -26,6 +26,12 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Test Storybook
+        run: npm run test-storybook
+
       - name: Build
         run: npm run build # out/ ディレクトリが生成される
 
