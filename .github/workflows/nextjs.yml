@@ -73,6 +73,24 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+
+      # === ここから deploy.yml の処理を統合 ===
+      - name: Install Playwright Browsers # Storybook テストに必要
+        run: ${{ steps.detect-package-manager.outputs.runner }} playwright install --with-deps
+
+      - name: Lint
+        run: ${{ steps.detect-package-manager.outputs.manager }} run lint
+
+      - name: Build Storybook
+        run: ${{ steps.detect-package-manager.outputs.manager }} run build-storybook --quiet
+
+      - name: Serve Storybook and run tests
+        run: |
+          npx concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \\
+            \"npx http-server storybook-static --port 6006 --silent\" \\
+            \"npx wait-on tcp:127.0.0.1:6006 && ${{ steps.detect-package-manager.outputs.manager }} run test-storybook\"
+      # === ここまで統合 ===
+
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
