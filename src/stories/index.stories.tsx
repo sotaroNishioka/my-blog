@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { within, expect } from '@storybook/test';
-import Home from './index'; // Import the Home component
+import HomePage from '../pages/index'; // <-- Update path here
+import { PostData } from '../lib/posts'; // Assuming PostData type is still in lib/posts
 
 // モックデータ (Home.test.tsx からコピー)
 const mockPosts = [
@@ -18,9 +19,9 @@ const mockPosts = [
   },
 ];
 
-const meta: Meta<typeof Home> = {
+const meta: Meta<typeof HomePage> = {
   title: 'Pages/Home', // Storybookでの表示名
-  component: Home,
+  component: HomePage,
   parameters: {
     layout: 'fullscreen', // レイアウトに合わせて全画面表示
   },
@@ -31,7 +32,7 @@ const meta: Meta<typeof Home> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Home>;
+type Story = StoryObj<typeof HomePage>;
 
 // 記事が複数ある場合のストーリー
 export const WithPosts: Story = {

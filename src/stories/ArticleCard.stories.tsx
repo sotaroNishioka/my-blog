@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { within, expect } from '@storybook/test';
-import ArticleCard from './ArticleCard';
+import ArticleCard from '../components/ArticleCard';
+import { PostData } from '../lib/posts';
 
 // モックデータ (Home.test.tsx などから拝借)
 const mockArticleData = {
