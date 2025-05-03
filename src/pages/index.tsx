@@ -1,6 +1,6 @@
 import type { GetStaticProps } from 'next';
-import Link from 'next/link';
 import Layout from '@/components/Layout';
+import ArticleCard from '@/components/ArticleCard';
 import { getSortedPostsData } from '@/lib/posts';
 import type { PostData } from '@/lib/posts';
 
@@ -15,19 +15,7 @@ export default function Home({ posts }: Props) {
         <h1 className="text-3xl font-bold">Blog Posts</h1>
         <div className="grid gap-6">
           {posts.map((post) => (
-            <article key={post.id} className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow">
-              <Link href={`/posts/${post.id}`} className="block space-y-2">
-                <h2 className="text-2xl font-semibold text-gray-900">{post.title}</h2>
-                <div className="text-gray-500">{post.date}</div>
-                <div className="flex gap-2">
-                  {post.tags.map((tag) => (
-                    <span key={tag} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </Link>
-            </article>
+            <ArticleCard key={post.id} id={post.id} title={post.title} date={post.date} tags={post.tags} />
           ))}
         </div>
       </div>
