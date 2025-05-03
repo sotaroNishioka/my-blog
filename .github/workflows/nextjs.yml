@@ -70,8 +70,6 @@ jobs:
         run: npm run lint
       - name: Run Tests (Jest)
         run: npm test
-      - name: Test Storybook build
-        run: npm run test-storybook -- --no-cache # Storybookテスト実行
 
   build:
     runs-on: ubuntu-latest
@@ -102,6 +100,11 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: /my-blog
       - name: Build Storybook
         run: npm run build-storybook
+      - name: Serve Storybook static build and run tests
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \\
+            "npx http-server storybook-static --port 6006 --silent" \\
+            "npx wait-on tcp:127.0.0.1:6006 && npm run test-storybook -- --no-cache"
       - name: Upload Next.js build artifact
         uses: actions/upload-pages-artifact@v3
         with:
