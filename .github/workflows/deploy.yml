@@ -44,7 +44,7 @@ jobs:
       # main ブランチへのプッシュ時のみデプロイを実行
       - name: Build Next.js App
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: npm run build # out/ ディレクトリが生成される
+        run: rm -rf .next && npm run build # Clear cache before building
 
       - name: Deploy to gh-pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
