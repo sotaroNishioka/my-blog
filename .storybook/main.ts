@@ -2,6 +2,7 @@ import type { StorybookConfig } from '@storybook/nextjs';
 import type { Configuration } from 'webpack';
 import path from 'path'; // Import path for resolving alias
 import webpack from 'webpack'; // Import webpack
+import { NormalModuleReplacementPlugin } from 'webpack';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -15,12 +16,15 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
-  staticDirs: [{ from: '../public', to: '/' }],
+  docs: {
+    autodocs: 'tag',
+  },
+  staticDirs: [{ from: path.resolve(process.cwd(), 'public'), to: '/' }],
 
   webpackFinal: async (config: Configuration) => {
     config.plugins = config.plugins || [];
     config.plugins.push(
-      new webpack.NormalModuleReplacementPlugin(/^node:/, (resource: { request: string }) => {
+      new NormalModuleReplacementPlugin(/^node:/, (resource: { request: string }) => {
         // Remove the 'node:' prefix
         resource.request = resource.request.replace(/^node:/, '');
       })
