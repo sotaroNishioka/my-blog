@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+  pull_request: # プルリクエストでも実行するように追加 (推奨)
+    branches: [ main ]
 
 permissions:
   contents: write
@@ -23,19 +25,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Playwright のブラウザをインストール (test-storybook に必要)
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
       - name: Lint
         run: npm run lint
 
       - name: Build Storybook
-        run: npm run build-storybook
+        run: npm run build-storybook --quiet # Optional: Reduce logging
 
-      - name: Test Storybook
-        run: npm run test-storybook
+      - name: Serve Storybook and run tests
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server storybook-static --port 6006 --silent" \
+            "npx wait-on tcp:127.0.0.1:6006 && npm run test-storybook"
 
-      - name: Build
+      # main ブランチへのプッシュ時のみデプロイを実行
+      - name: Build Next.js App
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npm run build # out/ ディレクトリが生成される
 
       - name: Deploy to gh-pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
