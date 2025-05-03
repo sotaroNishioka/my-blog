@@ -43,6 +43,7 @@ tags: ['タグ1', 'タグ2'] # オプション
 ## 1.4 技術スタック
 - **Frontend**: Next.js (Pages Router), React 18+, TypeScript, Tailwind CSS
 - **Markdown**: marked, gray-matter
+- **Storybook**: Storybook 7+
 - **CI/CD**: GitHub Actions, GitHub Pages
 - **Lint/Format**: Biome
 - **Testing**: Jest, React Testing Library
@@ -52,6 +53,7 @@ tags: ['タグ1', 'タグ2'] # オプション
 /
 ├── public/              # 静的ファイル (画像など)
 ├── posts/               # Markdown記事ファイル
+├── .storybook/          # Storybook設定
 ├── src/
 │   ├── pages/           # Next.js ページコンポーネント
 │   │   ├── _app.tsx
@@ -64,6 +66,7 @@ tags: ['タグ1', 'タグ2'] # オプション
 │   │   └── posts.ts     # Markdown処理ロジック
 │   ├── styles/          # スタイル関連
 │   │   └── globals.css
+│   ├── stories/         # Storybook ストーリーファイル (*.stories.tsx)
 │   └── __tests__/       # テストファイル
 │       ├── Home.test.tsx
 │       └── Layout.test.tsx
@@ -81,6 +84,7 @@ tags: ['タグ1', 'タグ2'] # オプション
 ├── postcss.config.js
 ├── tailwind.config.js
 ├── tsconfig.json
+├── vitest.config.ts     # Vitest設定
 └── README.md
 ```
 
