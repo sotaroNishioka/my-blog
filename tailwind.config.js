@@ -13,6 +13,10 @@ module.exports = {
           600: '#798184',
           500: '#8d9298',
           400: '#a7abb1',
+          300: '#d8dadf',
+          100: '#f1f6f9',
+          body: 'rgba(3, 10, 18, .81)',
+          bg: '#fff',
         },
       },
       backgroundImage: {
