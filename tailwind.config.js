@@ -45,7 +45,7 @@ module.exports = {
               '@apply text-lg font-semibold text-main-body mb-3': {},
             },
             a: {
-              '@apply text-main-800 hover:text-main-600 underline decoration-main-400 hover:decoration-main-500 decoration-dotted decoration-1 underline-offset-4 transition duration-250 ease-in-out':
+              '@apply text-main-800 hover:text-main-600 underline decoration-main-400 hover:decoration-main-500 decoration-dotted decoration-1 underline-offset-4 transition duration-300 ease-in-out':
                 {},
               textDecoration: 'underline',
               fontWeight: 'inherit',

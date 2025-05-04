@@ -20,7 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
   let baseStyle = '';
   // 共通スタイルを更新: padding, font-size, focus は削除 (variant で指定するため)
   const commonStyle =
-    'inline-flex items-center justify-center border font-medium rounded-full transition duration-250 ease-in-out tracking-wider'; // rounded-full, tracking-wider, duration-250 を追加
+    'inline-flex items-center justify-center border font-medium rounded-full transition duration-300 ease-in-out tracking-wider'; // rounded-full, tracking-wider, duration-300 を追加
   const disabledStyle = 'disabled:opacity-50 disabled:cursor-not-allowed';
 
   // variantに応じてスタイルを決定
