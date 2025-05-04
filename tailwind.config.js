@@ -7,6 +7,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        main: {
+          800: '#595f63',
+          600: '#798184',
+          500: '#8d9298',
+          400: '#a7abb1',
+        },
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
@@ -33,7 +41,7 @@ module.exports = {
               '@apply text-lg font-semibold text-neutral-800 mb-3': {},
             },
             a: {
-              '@apply text-neutral-300 hover:text-neutral-500 underline decoration-neutral-300 hover:decoration-neutral-500 transition duration-150 ease-in-out':
+              '@apply text-main-800 hover:text-main-600 underline decoration-main-400 hover:decoration-main-500 decoration-dotted decoration-1 underline-offset-4 transition duration-250 ease-in-out':
                 {},
               textDecoration: 'underline',
               fontWeight: 'inherit',
