@@ -1,23 +1,20 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { marked } from 'marked';
 
-type ArticleBodyProps = {
-  contentHtml: string; // Markdownから変換されたHTML文字列
-  className?: string;
-};
+interface ArticleBodyProps {
+  /** Markdown形式の本文 */
+  markdownContent: string;
+}
 
-export const ArticleBody: React.FC<ArticleBodyProps> = ({ contentHtml, className }) => {
-  // TODO: Tailwind Typography プラグインを導入して適用する
-  const proseStyle = 'prose lg:prose-xl max-w-none'; // Typographyプラグイン用のクラス (仮)
+/**
+ * Markdown形式の本文を表示するコンポーネント
+ * @param markdownContent - 表示するMarkdownコンテンツ
+ */
+export const ArticleBody: FC<ArticleBodyProps> = ({ markdownContent }) => {
+  const htmlContent = marked.parse(markdownContent);
 
-  return (
-    <div
-      className={`${proseStyle} ${className || ''}`}
-      // MarkdownからのHTMLを安全に表示するためdangerouslySetInnerHTMLを使用
-      // サニタイズはmarked側で行う前提
-      // eslint-disable-next-line react/no-danger
-      dangerouslySetInnerHTML={{ __html: contentHtml }}
-    />
-  );
+  // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+  return <div className="prose" dangerouslySetInnerHTML={{ __html: htmlContent }} />;
 };
 
 export default ArticleBody;
