@@ -18,9 +18,9 @@ export const Link: React.FC<LinkProps> = ({
   // rel,
   isExternal = false, // デフォルトは内部リンク
 }) => {
-  // しずかなインターネット風スタイル: 落ち着いた色合いで、ホバーは控えめに
+  // テキスト色と下線色を合わせるスタイルに変更
   const baseStyle =
-    'text-neutral-800 hover:text-neutral-600 underline decoration-neutral-300 hover:decoration-neutral-500 transition duration-150 ease-in-out';
+    'text-neutral-300 hover:text-neutral-500 underline decoration-neutral-300 hover:decoration-neutral-500 transition duration-150 ease-in-out';
 
   if (isExternal || href.startsWith('http')) {
     // isExternalフラグがtrue、またはhrefがhttp(s)で始まる場合は外部リンクとして通常のaタグを使用

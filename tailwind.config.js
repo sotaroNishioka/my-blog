@@ -33,7 +33,7 @@ module.exports = {
               '@apply text-lg font-semibold text-neutral-800 mb-3': {},
             },
             a: {
-              '@apply text-neutral-800 hover:text-neutral-600 underline decoration-neutral-300 hover:decoration-neutral-500 transition duration-150 ease-in-out':
+              '@apply text-neutral-300 hover:text-neutral-500 underline decoration-neutral-300 hover:decoration-neutral-500 transition duration-150 ease-in-out':
                 {},
               textDecoration: 'underline',
               fontWeight: 'inherit',
