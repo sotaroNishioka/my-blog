@@ -62,13 +62,11 @@ export const WithPosts: Story = {
     const date2 = await canvas.findByText('2024-01-02');
     expect(date2).toBeInTheDocument();
 
-    // タグが表示されているか
-    const tag1 = await canvas.findByText('tag1');
-    expect(tag1).toBeInTheDocument();
-    const tag2 = await canvas.findByText('tag2');
-    expect(tag2).toBeInTheDocument();
-    const tag3 = await canvas.findByText('tag3');
-    expect(tag3).toBeInTheDocument();
+    // タグが表示されているか (現在の実装に合わせて修正)
+    const tags1And2 = await canvas.findByText(/Tags: tag1, tag2/i);
+    expect(tags1And2).toBeInTheDocument();
+    const tags3 = await canvas.findByText(/Tags: tag3/i);
+    expect(tags3).toBeInTheDocument();
   },
 };
 
