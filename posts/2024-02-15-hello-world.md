@@ -2,6 +2,7 @@
 title: "Hello, World!"
 date: "2024-02-15"
 tags: ["nextjs", "github-pages", "typescript"]
+author: "Author Two"
 ---
 
 # Next.js と TypeScript でブログを作ってみた

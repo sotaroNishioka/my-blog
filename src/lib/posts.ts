@@ -18,6 +18,7 @@ export type PostData = {
   title: string;
   date: string;
   tags: string[];
+  author?: string;
   contentHtml: string;
 };
 
@@ -49,6 +50,7 @@ export function getSortedPostsData(): Result<Omit<PostData, 'contentHtml'>[], Po
           title: matterResult.data.title,
           date: dateString, // 文字列に変換した日付を使用
           tags: matterResult.data.tags || [],
+          author: matterResult.data.author || undefined
         });
       } catch (e) {
         // ファイル読み込みやパースのエラー
@@ -123,6 +125,7 @@ export async function getPostData(id: string): Promise<Result<PostData, PostsErr
           title: matterResult.data.title,
           date: matterResult.data.date,
           tags: matterResult.data.tags || [],
+          author: matterResult.data.author || undefined
         });
       } catch (e) {
         return err({ type: 'MarkdownParseError', path: fullPath, error: e });
@@ -139,4 +142,60 @@ export async function getPostData(id: string): Promise<Result<PostData, PostsErr
     }
     return err({ type: 'ReadFileError', path: fullPath, error: e });
   }
+}
+
+// 全著者のIDリストを取得
+export function getAllAuthorIds(): Result<{ params: { authorId: string } }[], PostsError> {
+  const postsResult = getSortedPostsData();
+  
+  if (postsResult.isErr()) {
+    return err(postsResult.error);
+  }
+  
+  const posts = postsResult.value;
+  
+  // 著者情報がある記事から著者を抽出し、重複を除去
+  const authors = Array.from(
+    new Set(
+      posts
+        .filter(post => post.author) // author が存在する記事だけ抽出
+        .map(post => post.author!)
+    )
+  );
+  
+  // 著者IDのパラメータオブジェクトを作成
+  return ok(
+    authors.map(author => ({
+      params: {
+        authorId: encodeURIComponent(author.toLowerCase().replace(/\s+/g, '-')),
+      },
+    }))
+  );
+}
+
+// 著者IDから著者名を取得
+export function getAuthorNameFromId(authorId: string): string {
+  // authorId はURL対応のため小文字ハイフン区切り化されているので
+  // 元の形式（スペース入り、大文字小文字の組み合わせ）に戻す処理が必要な場合は
+  // ここで行います。現在はそのまま表示します。
+  return decodeURIComponent(authorId).replace(/-/g, ' ');
+}
+
+// 著者別の記事を取得
+export function getPostsByAuthor(authorId: string): Result<Omit<PostData, 'contentHtml'>[], PostsError> {
+  const postsResult = getSortedPostsData();
+  
+  if (postsResult.isErr()) {
+    return err(postsResult.error);
+  }
+  
+  const posts = postsResult.value;
+  const authorName = getAuthorNameFromId(authorId);
+  
+  // 著者名が一致する記事だけをフィルタリング
+  const authorPosts = posts.filter(post => {
+    return post.author && post.author.toLowerCase() === authorName.toLowerCase();
+  });
+  
+  return ok(authorPosts);
 }
