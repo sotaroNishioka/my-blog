@@ -1,30 +1,30 @@
+import path from 'path';
 import { getAllAuthorIds, getAuthorNameFromId, getPostsByAuthor } from '@/lib/posts';
 
 // モックファイルシステム
-jest.mock('node:fs', () => ({
-  readdirSync: jest.fn(() => ['test-author1.md', 'test-author2.md']),
-  readFileSync: jest.fn((path) => {
-    if (path.includes('test-author1.md')) {
-      return `---
-title: 'Test Post Author 1'
-date: '2024-01-01'
-tags: ['test', 'author1']
-author: 'Author One'
----
-Test content 1`;
-    }
-    if (path.includes('test-author2.md')) {
-      return `---
-title: 'Test Post Author 2'
-date: '2024-01-02'
-tags: ['test', 'author2']
-author: 'Author Two'
----
-Test content 2`;
-    }
-    throw new Error(`File not found: ${path}`);
-  }),
-}));
+jest.mock('node:fs', () => {
+  const originalFs = jest.requireActual('node:fs');
+  const testFixturesPath = path.join(process.cwd(), 'src/__tests__/fixtures');
+
+  return {
+    readdirSync: jest.fn((dirPath) => {
+      // postsディレクトリへの参照をテストフィクスチャディレクトリに置き換える
+      if (dirPath.includes('/posts')) {
+        return originalFs.readdirSync(path.join(testFixturesPath, 'posts'));
+      }
+      return originalFs.readdirSync(dirPath);
+    }),
+    readFileSync: jest.fn((filePath, encoding) => {
+      // postsディレクトリへの参照をテストフィクスチャディレクトリに置き換える
+      if (filePath.includes('/posts/')) {
+        const fileName = path.basename(filePath);
+        const testPath = path.join(testFixturesPath, 'posts', fileName);
+        return originalFs.readFileSync(testPath, encoding);
+      }
+      return originalFs.readFileSync(filePath, encoding);
+    }),
+  };
+});
 
 // jest.mockされたモジュールの型を解決するためのアサーション
 const fs = jest.requireMock('node:fs');
