@@ -199,3 +199,60 @@ export function getPostsByAuthor(authorId: string): Result<Omit<PostData, 'conte
 
   return ok(authorPosts);
 }
+
+// 全タグリストとその記事数を取得
+export function getAllTagsWithCount(): Result<{ [tag: string]: number }, PostsError> {
+  const postsResult = getSortedPostsData();
+
+  if (postsResult.isErr()) {
+    return err(postsResult.error);
+  }
+
+  const posts = postsResult.value;
+  const tagCounts: { [tag: string]: number } = {};
+
+  for (const post of posts) {
+    for (const tag of post.tags) {
+      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+    }
+  }
+
+  return ok(tagCounts);
+}
+
+// 全タグのIDリストを取得 (getStaticPaths用)
+export function getAllTagIds(): Result<{ params: { tag: string } }[], PostsError> {
+  const tagsResult = getAllTagsWithCount();
+
+  if (tagsResult.isErr()) {
+    return err(tagsResult.error);
+  }
+
+  const tags = Object.keys(tagsResult.value);
+
+  return ok(
+    tags.map((tag) => ({
+      params: {
+        // タグ名をURLパラメータ用にエンコード
+        tag: encodeURIComponent(tag),
+      },
+    }))
+  );
+}
+
+// 特定のタグを持つ記事を取得
+export function getPostsByTag(tag: string): Result<Omit<PostData, 'contentHtml'>[], PostsError> {
+  const postsResult = getSortedPostsData();
+
+  if (postsResult.isErr()) {
+    return err(postsResult.error);
+  }
+
+  const posts = postsResult.value;
+  // URLデコードされたタグ名でフィルタリング
+  const decodedTag = decodeURIComponent(tag);
+
+  const taggedPosts = posts.filter((post) => post.tags.includes(decodedTag));
+
+  return ok(taggedPosts);
+}
