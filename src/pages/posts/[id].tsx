@@ -1,34 +1,37 @@
 import type { GetStaticProps, GetStaticPaths, GetStaticPropsContext } from 'next';
-import Layout from '@/components/Layout';
+import BaseLayout from '@/components/layout/BaseLayout';
 import { getAllPostIds, getPostData } from '@/lib/posts';
 import type { PostData, PostsError } from '@/lib/posts';
+import ArticleHeader from '@/components/features/Article/ArticleHeader';
+import ArticleBody from '@/components/features/Article/ArticleBody';
+import AuthorProfile from '@/components/features/Article/AuthorProfile';
 
 type Props = {
   post: PostData;
 };
 
 export default function Post({ post }: Props) {
+  const authorId = post.author ? encodeURIComponent(post.author.toLowerCase().replace(/\s+/g, '-')) : null;
+
   return (
-    <Layout>
-      <article className="prose prose-lg mx-auto">
-        <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-        <div className="mb-8">
-          <div className="text-gray-500 mb-4">{post.date}</div>
-          <div className="flex gap-2">
-            {post.tags.map((tag) => (
-              <span key={tag} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm">
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-        <div
-          className="mt-8"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-          dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-        />
-      </article>
-    </Layout>
+    <BaseLayout>
+      <div className="container mx-auto px-4 py-12 max-w-3xl">
+        <article>
+          <ArticleHeader
+            title={post.title}
+            publishedDate={post.date}
+            authorName={post.author || '匿名'}
+            authorLink={authorId ? `/author/${authorId}` : '#'}
+          />
+          <ArticleBody markdownContent={post.contentHtml} />
+          {post.author && authorId && (
+            <div className="mt-12 pt-8 border-t border-neutral-200">
+              <AuthorProfile authorName={post.author} authorLink={`/author/${authorId}`} />
+            </div>
+          )}
+        </article>
+      </div>
+    </BaseLayout>
   );
 }
 
