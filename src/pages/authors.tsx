@@ -19,24 +19,25 @@ export default function AuthorsPage({ authors }: AuthorsPageProps) {
   return (
     <BaseLayout>
       <div className="container mx-auto px-4 py-8">
-        <Heading level={1} className="mb-8">著者一覧</Heading>
-        
+        <Heading level={1} className="mb-8">
+          著者一覧
+        </Heading>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {authors.map((author) => (
-            <div key={author.id} className="border border-neutral-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
+            <div
+              key={author.id}
+              className="border border-neutral-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200"
+            >
               <Heading level={2} className="text-xl mb-2 border-none pb-0">
                 <Link href={`/author/${author.id}`}>{author.name}</Link>
               </Heading>
-              <p className="text-sm text-neutral-500">
-                記事数: {author.postCount}
-              </p>
+              <p className="text-sm text-neutral-500">記事数: {author.postCount}</p>
             </div>
           ))}
         </div>
-        
-        {authors.length === 0 && (
-          <p className="text-center p-6">著者が見つかりません。</p>
-        )}
+
+        {authors.length === 0 && <p className="text-center p-6">著者が見つかりません。</p>}
       </div>
     </BaseLayout>
   );
@@ -45,7 +46,7 @@ export default function AuthorsPage({ authors }: AuthorsPageProps) {
 export const getStaticProps: GetStaticProps<AuthorsPageProps> = async () => {
   // 全著者IDを取得
   const authorIdsResult = getAllAuthorIds();
-  
+
   if (authorIdsResult.isErr()) {
     console.error('Error fetching author IDs:', authorIdsResult.error);
     return {
@@ -54,10 +55,10 @@ export const getStaticProps: GetStaticProps<AuthorsPageProps> = async () => {
       },
     };
   }
-  
+
   // 記事一覧を取得
   const postsResult = getSortedPostsData();
-  
+
   if (postsResult.isErr()) {
     console.error('Error fetching posts:', postsResult.error);
     return {
@@ -66,34 +67,35 @@ export const getStaticProps: GetStaticProps<AuthorsPageProps> = async () => {
       },
     };
   }
-  
+
   const posts = postsResult.value;
-  
+
   // 著者ごとの記事数をカウント
   const authorCounts: Record<string, number> = {};
   const authorNames: Record<string, string> = {};
-  
-  posts.forEach((post) => {
+
+  // for...ofループを使用
+  for (const post of posts) {
     if (post.author) {
       const authorId = post.author.toLowerCase().replace(/\s+/g, '-');
       authorCounts[authorId] = (authorCounts[authorId] || 0) + 1;
       authorNames[authorId] = post.author;
     }
-  });
-  
+  }
+
   // 著者情報の配列を作成
   const authors: AuthorInfo[] = Object.keys(authorCounts).map((authorId) => ({
     id: authorId,
     name: authorNames[authorId],
     postCount: authorCounts[authorId],
   }));
-  
+
   // 記事数の多い順にソート
   authors.sort((a, b) => b.postCount - a.postCount);
-  
+
   return {
     props: {
       authors,
     },
   };
-}; 
+};
