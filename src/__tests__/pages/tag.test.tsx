@@ -85,7 +85,7 @@ describe('TagPage', () => {
     render(<TagPage {...mockPropsEncodedTag} />);
 
     // 見出しにデコードされたタグ名が表示されること
-    expect(screen.getByText(`タグ: Next.js`)).toBeInTheDocument();
+    expect(screen.getByText('タグ: Next.js')).toBeInTheDocument();
 
     // 記事リストが表示されていることを確認
     expect(screen.getByText('記事数: 1')).toBeInTheDocument();
