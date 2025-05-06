@@ -6,6 +6,17 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    fontFamily: {
+      sans: [
+        'Inter',
+        'Noto Sans JP',
+        'BIZ UDPGothic',
+        '"Hiragino Kaku Gothic ProN"',
+        '"Hiragino Sans"',
+        'Meiryo',
+        'sans-serif',
+      ],
+    },
     extend: {
       colors: {
         main: {
