@@ -9,6 +9,7 @@ import { getAllTagIds, getPaginatedPostsByTagData, PostData } from '@/lib/posts'
 import { Pagination } from '@/components/common/Pagination';
 import Paragraph from '@/components/common/Paragraph';
 import Link from '@/components/common/Link';
+import { SITE_URL } from '@/lib/constants';
 
 interface TagParams extends ParsedUrlQuery {
   tag: string;
@@ -36,9 +37,19 @@ export default function TagPage({ tag, posts, currentPage, totalPages, totalPost
     }
   };
 
+  const pageTitle = `タグ: ${decodedTag}${
+    totalPages > 1 && currentPage > 1 ? ` (${currentPage}/${totalPages}ページ目)` : ''
+  }`;
+  const description = `「${decodedTag}」タグが付いた記事の一覧です。`;
+  const ogUrl = currentPage === 1 ? `${SITE_URL}/tags/${tag}` : `${SITE_URL}/tags/${tag}/page/${currentPage}`;
+
   if (totalPosts === 0) {
     return (
-      <Layout siteTitle={`タグ: ${decodedTag} - My Blog`}>
+      <Layout
+        pageTitle={`タグ: ${decodedTag}`}
+        description={`「${decodedTag}」タグの記事はまだありません。`}
+        ogUrl={`${SITE_URL}/tags/${tag}`}
+      >
         <div className="container mx-auto px-4 py-8">
           <Heading level={1} className="mb-4">
             タグ: {decodedTag}
@@ -53,7 +64,7 @@ export default function TagPage({ tag, posts, currentPage, totalPages, totalPost
   }
 
   return (
-    <Layout siteTitle={`タグ: ${decodedTag}${totalPages > 1 ? ` (${currentPage}/${totalPages})` : ''} - My Blog`}>
+    <Layout pageTitle={pageTitle} description={description} ogUrl={ogUrl}>
       <div className="container mx-auto px-4 py-8">
         <Heading level={1} className="mb-8">
           タグ: {decodedTag}

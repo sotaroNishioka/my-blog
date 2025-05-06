@@ -14,7 +14,7 @@ alwaysApply: true
 
 反面、現在のコンテキストに応じた処理は苦手です。コンテキストが不明瞭な時は、ユーザーに確認します。
 
-このプロジェクトは[https://github.com/sotaroNishioka/my-blog](https://github.com/sotaroNishioka/my-blog)で管理されています。
+このプロジェクトは[https://github.com/sotaroNishioka/my-blog](mdc:https:/github.com/sotaroNishioka/my-blog)で管理されています。
 
 
 # 作業フロー
@@ -106,6 +106,7 @@ git branch -d issue-42-auth-result-type
 
 ### 5 プルリクエスト作成のポイント
 
+- プルリクエストは必ずMCPサーバーを経由して作成する
 - タイトルには変更の種類（feat, fix など）を含める
 - 本文には必ず関連するIssue番号を記載（`Closes #42` など）
 - スクリーンショットや動作確認方法を含めるとレビューがスムーズに
