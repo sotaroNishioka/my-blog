@@ -19,8 +19,8 @@ export default function Post({ post }: Props) {
   return (
     <Layout
       pageTitle={post.title}
-      description={post.excerpt}
-      ogImageUrl={post.ogImage ? `${SITE_URL}${post.ogImage.startsWith('/') ? '' : '/'}${post.ogImage}` : undefined}
+      description={post.excerpt || undefined}
+      ogImageUrl={`/og-images/posts/${post.id}.svg`}
       ogUrl={articleUrl}
       ogType="article"
     >
