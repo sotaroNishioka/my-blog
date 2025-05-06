@@ -8,6 +8,7 @@ type LinkProps = {
   // target?: '_blank' | '_self' | '_parent' | '_top'; // target属性を追加
   // rel?: string; // rel属性を追加
   isExternal?: boolean; // 外部リンクかどうかを判定するフラグ
+  'data-testid'?: string; // data-testid を明示的に追加するのだ
 };
 
 export const Link: React.FC<LinkProps> = ({
@@ -17,6 +18,7 @@ export const Link: React.FC<LinkProps> = ({
   // target,
   // rel,
   isExternal = false, // デフォルトは内部リンク
+  'data-testid': dataTestId, // propsからdata-testidを取得するのだ
 }) => {
   // しずかなインターネットのスタイルに合わせる
   const baseStyle =
@@ -30,6 +32,7 @@ export const Link: React.FC<LinkProps> = ({
         className={`${baseStyle} ${className || ''}`}
         target="_blank" // 外部リンクは基本的に新しいタブで開く
         rel="noopener noreferrer" // セキュリティ対策
+        data-testid={dataTestId} // ここで渡すのだ
       >
         {children}
       </a>
@@ -38,7 +41,9 @@ export const Link: React.FC<LinkProps> = ({
 
   // 内部リンクの場合: NextLinkに直接スタイルを適用し、子要素のaタグは削除
   return (
-    <NextLink href={href} className={`${baseStyle} ${className || ''}`}>
+    <NextLink href={href} className={`${baseStyle} ${className || ''}`} data-testid={dataTestId}>
+      {' '}
+      // ここでも渡すのだ
       {children}
     </NextLink>
   );
