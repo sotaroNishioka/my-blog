@@ -4,7 +4,7 @@ import AuthorPage from '@/pages/author/[authorId]';
 import { PostData } from '@/lib/posts';
 
 // モックコンポーネント
-jest.mock('@/components/layout/BaseLayout', () => ({
+jest.mock('@/components/layout/Layout', () => ({
   __esModule: true,
   default: ({ children }: { children: React.ReactNode }) => <div data-testid="mock-layout">{children}</div>,
 }));

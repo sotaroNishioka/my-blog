@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import AuthorsPage from '@/pages/authors';
 
 // モックコンポーネント
-jest.mock('@/components/layout/BaseLayout', () => ({
+jest.mock('@/components/layout/Layout', () => ({
   __esModule: true,
   default: ({ children }: { children: React.ReactNode }) => <div data-testid="mock-layout">{children}</div>,
 }));

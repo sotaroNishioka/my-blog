@@ -1,9 +1,10 @@
 import type { GetStaticProps, GetStaticPaths, GetStaticPropsContext } from 'next';
-import BaseLayout from '@/components/layout/BaseLayout';
+import { ParsedUrlQuery } from 'querystring';
+import Layout from '@/components/layout/Layout';
 import { getAllPostIds, getPostData } from '@/lib/posts';
 import type { PostData, PostsError } from '@/lib/posts';
 import ArticleHeader from '@/components/features/Article/ArticleHeader';
-import ArticleBody from '@/components/features/Article/ArticleBody';
+import { ArticleBody } from '@/components/features/Article/ArticleBody';
 import AuthorProfile from '@/components/features/Article/AuthorProfile';
 
 type Props = {
@@ -14,7 +15,7 @@ export default function Post({ post }: Props) {
   const authorId = post.author ? encodeURIComponent(post.author.toLowerCase().replace(/\s+/g, '-')) : null;
 
   return (
-    <BaseLayout>
+    <Layout>
       <div className="container mx-auto px-4 py-12 max-w-3xl">
         <article>
           <ArticleHeader
@@ -31,7 +32,7 @@ export default function Post({ post }: Props) {
           )}
         </article>
       </div>
-    </BaseLayout>
+    </Layout>
   );
 }
 

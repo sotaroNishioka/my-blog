@@ -1,7 +1,7 @@
 import { GetStaticProps, GetStaticPaths } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import React from 'react';
-import BaseLayout from '@/components/layout/BaseLayout';
+import Layout from '@/components/layout/Layout';
 import ArticleList from '@/components/features/Article/ArticleList';
 import Heading from '@/components/common/Heading';
 import { getAllTagIds, getPostsByTag, PostData } from '@/lib/posts';
@@ -19,7 +19,7 @@ export default function TagPage({ tag, posts }: TagPageProps) {
   const decodedTag = decodeURIComponent(tag);
 
   return (
-    <BaseLayout>
+    <Layout>
       <div className="container mx-auto px-4 py-8">
         <Heading level={1} className="mb-8">
           タグ: {decodedTag}
@@ -27,7 +27,7 @@ export default function TagPage({ tag, posts }: TagPageProps) {
 
         <ArticleList articles={posts} />
       </div>
-    </BaseLayout>
+    </Layout>
   );
 }
 
