@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # mainブランチへのpushでトリガー
+  workflow_dispatch: # 手動実行も可能にする
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # プロジェクトで使用しているNode.jsのバージョンに合わせる
+          cache: 'yarn' # npmの場合は 'npm'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile # npmの場合は npm ci
+
+      - name: Install OG Image generation tools
+        run: yarn add satori gray-matter # npmの場合は npm install satori gray-matter
+
+      - name: Generate OG Images for posts
+        run: node scripts/generate-og-images-for-posts.mjs
+        # フォントファイルが存在することを確認（オプション）
+        # run: |
+        #   if [ ! -f "public/fonts/NotoSansJP-Bold.otf" ] || [ ! -f "public/fonts/NotoSansJP-Regular.otf" ]; then
+        #     echo "Error: Font files not found in public/fonts/"
+        #     exit 1
+        #   fi
+        #   node scripts/generate-og-images-for-posts.mjs
+
+      - name: Build Next.js application
+        env:
+          # next.config.jsで basePath を設定している場合は、それも環境変数で渡す必要があるかもしれない
+          # BASE_PATH: /my-blog # 例
+          NEXT_PUBLIC_BASE_PATH: /my-blog # next.config.jsのbasePathと合わせる
+        run: yarn build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out # Next.jsの静的エクスポート出力ディレクトリ
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 

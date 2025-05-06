@@ -20,6 +20,8 @@ export type PostData = {
   tags: string[];
   author?: string;
   contentHtml: string;
+  excerpt?: string; // OGP用の抜粋
+  ogImage?: string; // OGP用の画像URL
 };
 
 export function getSortedPostsData(): Result<Omit<PostData, 'contentHtml'>[], PostsError> {
@@ -45,12 +47,17 @@ export function getSortedPostsData(): Result<Omit<PostData, 'contentHtml'>[], Po
             ? matterResult.data.date.toISOString().split('T')[0]
             : matterResult.data.date;
 
+        // excerpt の生成 (frontmatterにあればそれ、なければ本文から生成するロジックは後ほど検討)
+        const excerpt = matterResult.data.excerpt || `${matterResult.content.substring(0, 120)}...`;
+
         return ok({
           id,
           title: matterResult.data.title,
           date: dateString, // 文字列に変換した日付を使用
           tags: matterResult.data.tags || [],
-          author: matterResult.data.author || undefined,
+          author: matterResult.data.author || null,
+          excerpt: excerpt || null,
+          ogImage: matterResult.data.ogImage || null,
         });
       } catch (e) {
         // ファイル読み込みやパースのエラー
@@ -150,6 +157,9 @@ export async function getPostData(id: string): Promise<Result<PostData, PostsErr
       // メタデータを解析
       const matterResult = matter(fileContents);
 
+      // excerpt の生成
+      const excerpt = matterResult.data.excerpt || `${matterResult.content.substring(0, 120)}...`;
+
       try {
         // Markdown を HTML に変換 (marked を使用)
         const contentHtml = await marked(matterResult.content);
@@ -160,7 +170,9 @@ export async function getPostData(id: string): Promise<Result<PostData, PostsErr
           title: matterResult.data.title,
           date: matterResult.data.date,
           tags: matterResult.data.tags || [],
-          author: matterResult.data.author || undefined,
+          author: matterResult.data.author || null,
+          excerpt: excerpt || null,
+          ogImage: matterResult.data.ogImage || null,
         });
       } catch (e) {
         return err({ type: 'MarkdownParseError', path: fullPath, error: e });

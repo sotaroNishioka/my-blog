@@ -6,6 +6,7 @@ import type { PostData, PostsError } from '@/lib/posts';
 import ArticleHeader from '@/components/features/Article/ArticleHeader';
 import { ArticleBody } from '@/components/features/Article/ArticleBody';
 import AuthorProfile from '@/components/features/Article/AuthorProfile';
+import { SITE_URL } from '@/lib/constants';
 
 type Props = {
   post: PostData;
@@ -13,9 +14,16 @@ type Props = {
 
 export default function Post({ post }: Props) {
   const authorId = post.author ? encodeURIComponent(post.author.toLowerCase().replace(/\s+/g, '-')) : null;
+  const articleUrl = `${SITE_URL}/posts/${post.id}`;
 
   return (
-    <Layout>
+    <Layout
+      pageTitle={post.title}
+      description={post.excerpt || undefined}
+      ogImageUrl={`/og-images/posts/${post.id}.svg`}
+      ogUrl={articleUrl}
+      ogType="article"
+    >
       <div className="container mx-auto px-4 py-12 max-w-3xl">
         <article>
           <ArticleHeader

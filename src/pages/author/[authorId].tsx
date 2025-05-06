@@ -6,6 +6,7 @@ import UserProfileHeader from '@/components/features/UserProfile/UserProfileHead
 import TabNavigation from '@/components/features/Navigation/TabNavigation';
 import ArticleList from '@/components/features/Article/ArticleList';
 import { getAllAuthorIds, getAuthorNameFromId, getPostsByAuthor, PostData } from '@/lib/posts';
+import { SITE_URL, SITE_DESCRIPTION, DEFAULT_OG_IMAGE_URL } from '@/lib/constants';
 
 interface AuthorParams extends ParsedUrlQuery {
   authorId: string;
@@ -24,8 +25,12 @@ export default function AuthorPage({ authorName, posts, authorId }: AuthorPagePr
     // 将来的に「人気の記事」や「最新の記事」など他のタブを追加できる
   ];
 
+  const pageTitle = `${authorName} の記事一覧`;
+  const description = `${authorName} による記事の一覧です。`;
+  const ogUrl = `${SITE_URL}/author/${authorId}`;
+
   return (
-    <Layout>
+    <Layout pageTitle={pageTitle} description={description} ogUrl={ogUrl}>
       <div className="container mx-auto px-4 py-8">
         <UserProfileHeader userName={authorName} description={`${authorName}の記事一覧`} />
 
