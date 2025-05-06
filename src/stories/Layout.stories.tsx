@@ -41,7 +41,7 @@ export const Default: Story = {
     expect(childContent).toBeInTheDocument();
 
     // フッターのコピーライトが表示されているか (年を含む部分一致)
-    const footerText = await canvas.findByText(/© \d{4} My Blog. Built with Next.js and TypeScript./);
+    const footerText = await canvas.findByText(/© \d{4} My Blog. All rights reserved./);
     expect(footerText).toBeInTheDocument();
   },
 };
