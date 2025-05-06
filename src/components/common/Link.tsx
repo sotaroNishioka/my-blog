@@ -42,8 +42,6 @@ export const Link: React.FC<LinkProps> = ({
   // 内部リンクの場合: NextLinkに直接スタイルを適用し、子要素のaタグは削除
   return (
     <NextLink href={href} className={`${baseStyle} ${className || ''}`} data-testid={dataTestId}>
-      {' '}
-      // ここでも渡すのだ
       {children}
     </NextLink>
   );
