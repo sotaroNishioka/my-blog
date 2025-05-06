@@ -89,6 +89,41 @@ export function getSortedPostsData(): Result<Omit<PostData, 'contentHtml'>[], Po
   }
 }
 
+export function getPaginatedPostsData(
+  pageNumber: number,
+  postsPerPage: number
+): Result<{ posts: Omit<PostData, 'contentHtml'>[]; totalPages: number; totalPosts: number }, PostsError> {
+  const allPostsResult = getSortedPostsData();
+
+  if (allPostsResult.isErr()) {
+    return err(allPostsResult.error);
+  }
+
+  const allPosts = allPostsResult.value;
+  const totalPosts = allPosts.length;
+  const totalPages = Math.ceil(totalPosts / postsPerPage);
+
+  // ページ番号が不正な場合の調整
+  let currentPage = pageNumber;
+  if (currentPage < 1) {
+    currentPage = 1;
+  }
+  if (currentPage > totalPages && totalPages > 0) {
+    // totalPagesが0の場合（記事がない場合）はcurrentPageも0または1のままにする
+    currentPage = totalPages;
+  }
+
+  const startIndex = (currentPage - 1) * postsPerPage;
+  const endIndex = startIndex + postsPerPage;
+  const paginatedPosts = allPosts.slice(startIndex, endIndex);
+
+  return ok({
+    posts: paginatedPosts,
+    totalPages,
+    totalPosts,
+  });
+}
+
 export function getAllPostIds(): Result<{ params: { id: string } }[], PostsError> {
   try {
     const fileNames = readdirSync(postsDirectory);
