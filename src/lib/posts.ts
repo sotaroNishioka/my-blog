@@ -291,3 +291,49 @@ export function getPostsByTag(tag: string): Result<Omit<PostData, 'contentHtml'>
 
   return ok(taggedPosts);
 }
+
+export function getPaginatedPostsByTagData(
+  tag: string,
+  pageNumber: number,
+  postsPerPage: number
+): Result<
+  {
+    posts: Omit<PostData, 'contentHtml'>[];
+    totalPages: number;
+    totalPosts: number;
+    currentPage: number;
+  },
+  PostsError
+> {
+  const allTaggedPostsResult = getPostsByTag(tag);
+
+  if (allTaggedPostsResult.isErr()) {
+    return err(allTaggedPostsResult.error);
+  }
+
+  const allTaggedPosts = allTaggedPostsResult.value;
+  const totalPosts = allTaggedPosts.length;
+  const totalPages = Math.ceil(totalPosts / postsPerPage);
+
+  // ページ番号が不正な場合の調整
+  let currentPage = pageNumber;
+  if (currentPage < 1) {
+    currentPage = 1;
+  }
+  if (currentPage > totalPages && totalPages > 0) {
+    currentPage = totalPages;
+  }
+  // 記事がない場合 (totalPosts === 0)、currentPage は 1 (または 0) になる
+  // totalPages が 0 の場合、currentPage も 0 or 1 を維持する
+
+  const startIndex = (currentPage - 1) * postsPerPage;
+  const endIndex = startIndex + postsPerPage;
+  const paginatedPosts = allTaggedPosts.slice(startIndex, endIndex);
+
+  return ok({
+    posts: paginatedPosts,
+    totalPages,
+    totalPosts,
+    currentPage,
+  });
+}

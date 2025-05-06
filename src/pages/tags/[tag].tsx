@@ -1,10 +1,14 @@
 import { GetStaticProps, GetStaticPaths } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import React from 'react';
+import { useRouter } from 'next/router';
 import Layout from '@/components/layout/Layout';
 import ArticleList from '@/components/features/Article/ArticleList';
 import Heading from '@/components/common/Heading';
-import { getAllTagIds, getPostsByTag, PostData } from '@/lib/posts';
+import { getAllTagIds, getPaginatedPostsByTagData, PostData } from '@/lib/posts';
+import { Pagination } from '@/components/common/Pagination';
+import Paragraph from '@/components/common/Paragraph';
+import Link from '@/components/common/Link';
 
 interface TagParams extends ParsedUrlQuery {
   tag: string;
@@ -13,19 +17,58 @@ interface TagParams extends ParsedUrlQuery {
 type TagPageProps = {
   tag: string;
   posts: Omit<PostData, 'contentHtml'>[];
+  currentPage: number;
+  totalPages: number;
+  totalPosts: number;
 };
 
-export default function TagPage({ tag, posts }: TagPageProps) {
+const POSTS_PER_PAGE = 5;
+
+export default function TagPage({ tag, posts, currentPage, totalPages, totalPosts }: TagPageProps) {
+  const router = useRouter();
   const decodedTag = decodeURIComponent(tag);
 
+  const handlePageChange = (page: number) => {
+    if (page === 1) {
+      router.push(`/tags/${tag}`);
+    } else {
+      router.push(`/tags/${tag}/page/${page}`);
+    }
+  };
+
+  if (totalPosts === 0) {
+    return (
+      <Layout siteTitle={`タグ: ${decodedTag} - My Blog`}>
+        <div className="container mx-auto px-4 py-8">
+          <Heading level={1} className="mb-4">
+            タグ: {decodedTag}
+          </Heading>
+          <Paragraph>このタグの記事はまだありません。</Paragraph>
+          <Paragraph className="mt-4">
+            <Link href="/tags">他のタグを探す</Link>
+          </Paragraph>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
-    <Layout>
+    <Layout siteTitle={`タグ: ${decodedTag}${totalPages > 1 ? ` (${currentPage}/${totalPages})` : ''} - My Blog`}>
       <div className="container mx-auto px-4 py-8">
         <Heading level={1} className="mb-8">
           タグ: {decodedTag}
+          {totalPages > 1 && (
+            <span className="text-base font-normal text-neutral-500 ml-2">
+              (Page {currentPage}/{totalPages})
+            </span>
+          )}
         </Heading>
 
         <ArticleList articles={posts} />
+
+        {totalPages > 1 && (
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        )}
       </div>
     </Layout>
   );
@@ -58,21 +101,28 @@ export const getStaticProps: GetStaticProps<TagPageProps, TagParams> = async ({ 
   }
 
   const { tag } = params;
-  const postsResult = getPostsByTag(tag);
+  const pageResult = getPaginatedPostsByTagData(tag, 1, POSTS_PER_PAGE);
 
-  if (postsResult.isErr()) {
-    console.error(`Error fetching posts for tag ${tag}:`, postsResult.error);
+  if (pageResult.isErr()) {
+    console.error(`Error fetching posts for tag ${tag}, page 1:`, pageResult.error);
     return {
       notFound: true,
     };
   }
 
-  const posts = postsResult.value;
+  const { posts, totalPages, totalPosts, currentPage } = pageResult.value;
+
+  if (posts.length === 0 && totalPosts > 0 && currentPage === 1) {
+    return { notFound: true };
+  }
 
   return {
     props: {
-      tag, // URLエンコードされたままのタグを渡す
+      tag,
       posts,
+      currentPage,
+      totalPages,
+      totalPosts,
     },
   };
 };
