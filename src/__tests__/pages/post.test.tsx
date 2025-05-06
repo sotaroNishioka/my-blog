@@ -4,7 +4,7 @@ import Post from '@/pages/posts/[id]';
 import { PostData } from '@/lib/posts';
 
 // モックコンポーネント
-jest.mock('@/components/layout/BaseLayout', () => ({
+jest.mock('@/components/layout/Layout', () => ({
   __esModule: true,
   default: ({ children }: { children: React.ReactNode }) => <div data-testid="mock-layout">{children}</div>,
 }));
@@ -27,7 +27,7 @@ jest.mock('@/components/features/Article/ArticleHeader', () => ({
 
 jest.mock('@/components/features/Article/ArticleBody', () => ({
   __esModule: true,
-  default: ({ markdownContent }: { markdownContent: string }) => (
+  ArticleBody: ({ markdownContent }: { markdownContent: string }) => (
     // biome-ignore lint/security/noDangerouslySetInnerHtml: <Test mock>
     <div data-testid="mock-article-body" dangerouslySetInnerHTML={{ __html: markdownContent }} />
   ),

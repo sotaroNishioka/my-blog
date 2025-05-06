@@ -1,7 +1,7 @@
-import { GetStaticProps } from 'next';
+import type { GetStaticProps } from 'next';
 import React from 'react';
 import Link from '@/components/common/Link';
-import BaseLayout from '@/components/layout/BaseLayout';
+import Layout from '@/components/layout/Layout';
 import Heading from '@/components/common/Heading';
 import { getAllTagsWithCount } from '@/lib/posts';
 
@@ -16,7 +16,7 @@ type TagsPageProps = {
 
 export default function TagsPage({ tags }: TagsPageProps) {
   return (
-    <BaseLayout>
+    <Layout>
       <div className="container mx-auto px-4 py-8">
         <Heading level={1} className="mb-8">
           タグ一覧
@@ -37,7 +37,7 @@ export default function TagsPage({ tags }: TagsPageProps) {
 
         {tags.length === 0 && <p className="text-center p-6">タグが見つかりません。</p>}
       </div>
-    </BaseLayout>
+    </Layout>
   );
 }
 

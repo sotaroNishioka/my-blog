@@ -1,10 +1,10 @@
 import { GetStaticProps, GetStaticPaths } from 'next';
-import { ParsedUrlQuery } from 'querystring'
+import { ParsedUrlQuery } from 'querystring';
 import React from 'react';
-import BaseLayout from '@/components/layout/BaseLayout'
-import UserProfileHeader from '@/components/features/UserProfile/UserProfileHeader'
-import TabNavigation from '@/components/features/Navigation/TabNavigation'
-import ArticleList from '@/components/features/Article/ArticleList'
+import Layout from '@/components/layout/Layout';
+import UserProfileHeader from '@/components/features/UserProfile/UserProfileHeader';
+import TabNavigation from '@/components/features/Navigation/TabNavigation';
+import ArticleList from '@/components/features/Article/ArticleList';
 import { getAllAuthorIds, getAuthorNameFromId, getPostsByAuthor, PostData } from '@/lib/posts';
 
 interface AuthorParams extends ParsedUrlQuery {
@@ -25,22 +25,22 @@ export default function AuthorPage({ authorName, posts, authorId }: AuthorPagePr
   ];
 
   return (
-    <BaseLayout>
+    <Layout>
       <div className="container mx-auto px-4 py-8">
         <UserProfileHeader userName={authorName} description={`${authorName}の記事一覧`} />
-        
+
         <TabNavigation tabs={tabs} activeHref={`/author/${authorId}`} />
-        
+
         <ArticleList articles={posts} />
       </div>
-    </BaseLayout>
+    </Layout>
   );
 }
 
 // 動的ルーティングのためのパスを生成
 export const getStaticPaths: GetStaticPaths<AuthorParams> = async () => {
   const authorIdsResult = getAllAuthorIds();
-  
+
   if (authorIdsResult.isErr()) {
     console.error('Error fetching author IDs:', authorIdsResult.error);
     return {
@@ -48,7 +48,7 @@ export const getStaticPaths: GetStaticPaths<AuthorParams> = async () => {
       fallback: false,
     };
   }
-  
+
   return {
     paths: authorIdsResult.value,
     fallback: false, // 存在しないパスは404に
@@ -66,16 +66,16 @@ export const getStaticProps: GetStaticProps<AuthorPageProps, AuthorParams> = asy
   const { authorId } = params;
   const authorName = getAuthorNameFromId(authorId);
   const postsResult = getPostsByAuthor(authorId);
-  
+
   if (postsResult.isErr()) {
     console.error(`Error fetching posts for author ${authorId}:`, postsResult.error);
     return {
       notFound: true,
     };
   }
-  
+
   const posts = postsResult.value;
-  
+
   return {
     props: {
       authorName,
@@ -83,4 +83,4 @@ export const getStaticProps: GetStaticProps<AuthorPageProps, AuthorParams> = asy
       authorId,
     },
   };
-}; 
+};

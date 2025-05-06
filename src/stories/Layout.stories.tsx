@@ -32,15 +32,16 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     // ヘッダーのブログタイトルが表示されているか
-    const headerTitle = await canvas.findByText('My Blog');
+    const headerTitle = await canvas.findByTestId('header-site-title');
     expect(headerTitle).toBeInTheDocument();
+    expect(headerTitle).toHaveTextContent('My Blog');
 
     // 子要素が表示されているか
     const childContent = await canvas.findByText('Test Content');
     expect(childContent).toBeInTheDocument();
 
     // フッターのコピーライトが表示されているか (年を含む部分一致)
-    const footerText = await canvas.findByText(/© \d{4} My Blog. Built with Next.js and TypeScript./);
+    const footerText = await canvas.findByText(/© \d{4} My Blog. All rights reserved./);
     expect(footerText).toBeInTheDocument();
   },
 };

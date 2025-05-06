@@ -1,7 +1,7 @@
-import { GetStaticProps } from 'next';
+import type { GetStaticProps } from 'next';
 import React from 'react';
 import Link from '@/components/common/Link';
-import BaseLayout from '@/components/layout/BaseLayout';
+import Layout from '@/components/layout/Layout';
 import Heading from '@/components/common/Heading';
 import { getAllAuthorIds, getSortedPostsData, PostData } from '@/lib/posts';
 
@@ -17,7 +17,7 @@ type AuthorsPageProps = {
 
 export default function AuthorsPage({ authors }: AuthorsPageProps) {
   return (
-    <BaseLayout>
+    <Layout>
       <div className="container mx-auto px-4 py-8">
         <Heading level={1} className="mb-8">
           著者一覧
@@ -39,7 +39,7 @@ export default function AuthorsPage({ authors }: AuthorsPageProps) {
 
         {authors.length === 0 && <p className="text-center p-6">著者が見つかりません。</p>}
       </div>
-    </BaseLayout>
+    </Layout>
   );
 }
 
