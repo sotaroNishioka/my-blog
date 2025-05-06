@@ -3,6 +3,32 @@ import { render, screen } from '@testing-library/react';
 import TagPage from '@/pages/tags/[tag]';
 import { PostData } from '@/lib/posts';
 
+// useRouterのモックを追加
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    pathname: '/',
+    query: {},
+    asPath: '/',
+    route: '/', // routeプロパティも追加
+    replace: jest.fn(), // replaceメソッドも追加
+    reload: jest.fn(), // reloadメソッドも追加
+    back: jest.fn(), // backメソッドも追加
+    prefetch: jest.fn().mockResolvedValue(undefined), // prefetchメソッドも追加
+    beforePopState: jest.fn(), // beforePopStateメソッドも追加
+    events: {
+      // eventsオブジェクトも追加
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+    },
+    isFallback: false, // isFallbackプロパティも追加
+    isLocaleDomain: false, // isLocaleDomainプロパティも追加
+    isReady: true, // isReadyプロパティも追加
+    isPreview: false, // isPreviewプロパティも追加
+  })),
+}));
+
 // モックコンポーネント
 jest.mock('@/components/layout/Layout', () => ({
   __esModule: true,
