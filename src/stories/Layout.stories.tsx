@@ -32,8 +32,9 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     // ヘッダーのブログタイトルが表示されているか
-    const headerTitle = await canvas.findByText('My Blog');
+    const headerTitle = await canvas.findByTestId('header-site-title');
     expect(headerTitle).toBeInTheDocument();
+    expect(headerTitle).toHaveTextContent('My Blog');
 
     // 子要素が表示されているか
     const childContent = await canvas.findByText('Test Content');

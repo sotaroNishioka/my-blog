@@ -12,11 +12,15 @@ export const Header: React.FC<HeaderProps> = ({ siteTitle = 'My Blog' }) => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <Heading level={1} className="text-xl font-semibold mb-4 md:mb-0">
-            <Link href="/" className="text-neutral-800 hover:text-neutral-600 no-underline hover:no-underline">
+            <Link
+              href="/"
+              className="text-neutral-800 hover:text-neutral-600 no-underline hover:no-underline"
+              data-testid="header-site-title"
+            >
               {siteTitle}
             </Link>
           </Heading>
-          
+
           <nav>
             <ul className="flex space-x-6">
               <li>
