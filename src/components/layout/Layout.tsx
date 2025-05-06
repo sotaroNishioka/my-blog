@@ -2,12 +2,12 @@ import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
 
-type BaseLayoutProps = {
+type LayoutProps = {
   children: React.ReactNode;
-  siteTitle?: string; // Header に渡すため
+  siteTitle?: string;
 };
 
-export const BaseLayout: React.FC<BaseLayoutProps> = ({ children, siteTitle }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, siteTitle }) => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header siteTitle={siteTitle} />
@@ -17,4 +17,4 @@ export const BaseLayout: React.FC<BaseLayoutProps> = ({ children, siteTitle }) =
   );
 };
 
-export default BaseLayout;
+export default Layout;

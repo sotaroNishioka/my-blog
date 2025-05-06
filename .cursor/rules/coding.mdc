@@ -61,7 +61,26 @@ tags: ['タグ1', 'タグ2'] # オプション
 │   │   └── posts/
 │   │       └── [id].tsx   # 記事詳細ページ
 │   ├── components/      # 再利用可能なUIコンポーネント
-│   │   └── Layout.tsx
+│   │   ├── common/        # 汎用的な基本コンポーネント (Button, Link など)
+│   │   │   ├── Button.tsx
+│   │   │   ├── Heading.tsx
+│   │   │   ├── Link.tsx
+│   │   │   ├── Paragraph.tsx
+│   │   │   └── TagBadge.tsx
+│   │   ├── features/      # 特定機能に関連するコンポーネント群
+│   │   │   ├── Article/     # 記事関連
+│   │   │   │   ├── ArticleBody.tsx
+│   │   │   │   ├── ArticleCard.tsx
+│   │   │   │   ├── ArticleHeader.tsx
+│   │   │   │   ├── ArticleList.tsx
+│   │   │   │   ├── ArticleTags.tsx
+│   │   │   │   └── AuthorProfile.tsx
+│   │   │   ├── Navigation/  # ナビゲーション関連 (例: Breadcrumbs, Pagination)
+│   │   │   └── UserProfile/ # ユーザープロフィール関連
+│   │   └── layout/        # レイアウト関連コンポーネント
+│   │       ├── Footer.tsx
+│   │       ├── Header.tsx
+│   │       └── Layout.tsx
 │   ├── lib/             # ユーティリティ関数
 │   │   └── posts.ts     # Markdown処理ロジック
 │   ├── styles/          # スタイル関連
