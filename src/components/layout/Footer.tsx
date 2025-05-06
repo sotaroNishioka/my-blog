@@ -21,7 +21,9 @@ export const Footer: React.FC = () => {
             <br />
             文章書き散らしサービス
           </Paragraph>
-          <Button className="w-full md:w-auto bg-black text-white hover:bg-gray-800">ログイン</Button>
+          <Button variant="primary" className="w-full md:w-auto">
+            ログイン
+          </Button>
         </div>
 
         <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
